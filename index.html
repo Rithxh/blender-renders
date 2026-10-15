@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blender Renders</title>
+<meta name="description" content="A collection of 3D renders and animations made in Blender.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #17171b;
+    --text: #ececf0;
+    --muted: #8b8b96;
+    --line: #26262c;
+    --accent: #f08bc4;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 88px 0 40px; }
+  h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+  }
+  h1 span { color: var(--accent); }
+  .intro { color: var(--muted); max-width: 52ch; margin: 0; font-size: 1.05rem; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; gap: 8px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; scrollbar-width: none; }
+  nav .wrap::-webkit-scrollbar { display: none; }
+  nav a {
+    flex: none;
+    text-decoration: none;
+    font-size: 0.875rem;
+    color: var(--muted);
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: color .15s, border-color .15s;
+  }
+  nav a:hover { color: var(--text); border-color: var(--muted); }
+
+  section { padding: 64px 0 8px; scroll-margin-top: 56px; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+  h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .count { color: var(--muted); font-size: 0.875rem; white-space: nowrap; }
+
+  .grid { columns: 3 320px; column-gap: 14px; }
+  .item {
+    break-inside: avoid;
+    margin: 0 0 14px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    cursor: zoom-in;
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+  }
+  .item img, .item video { display: block; width: 100%; height: auto; transition: transform .4s ease, opacity .3s; }
+  .item:hover img { transform: scale(1.025); }
+  .item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .item.video { cursor: default; }
+  .badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    background: rgba(0,0,0,.6); color: #fff;
+    padding: 3px 8px; border-radius: 4px;
+    pointer-events: none;
+  }
+
+  footer { color: var(--muted); font-size: 0.875rem; padding: 72px 0 48px; border-top: 1px solid var(--line); margin-top: 64px; }
+
+  /* Lightbox */
+  .lb {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(5,5,7,.94);
+    display: none; align-items: center; justify-content: center;
+  }
+  .lb.open { display: flex; }
+  .lb img { max-width: 92vw; max-height: 86vh; border-radius: 6px; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  .lb-btn {
+    position: absolute;
+    background: rgba(255,255,255,.08); color: #fff;
+    border: 0; border-radius: 999px;
+    width: 44px; height: 44px;
+    font-size: 1.4rem; line-height: 1;
+    cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,.18); }
+  .lb-close { top: 16px; right: 16px; }
+  .lb-prev { left: 16px; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 16px; top: 50%; transform: translateY(-50%); }
+  .lb-cap { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: var(--muted); font-size: 0.875rem; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    header { padding-top: 56px; }
+    .grid { columns: 1; }
+    .lb-prev, .lb-next { top: auto; bottom: 48px; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <h1>Blender<br><span>Renders</span></h1>
+  <p class="intro">A collection of 3D scenes, models and animations I've made in Blender.</p>
+</header>
+
+<nav aria-label="Projects"><div class="wrap" id="nav"></div></nav>
+
+<main class="wrap" id="projects"></main>
+
+<footer class="wrap">Made with Blender.</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <img id="lb-img" alt="">
+  <button class="lb-btn lb-close" id="lb-close" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous">&#8249;</button>
+  <button class="lb-btn lb-next" id="lb-next" aria-label="Next">&#8250;</button>
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<script>
+// Add a new project: put its files in a folder, run make-thumbs.sh, and add an entry here.
+// Images are listed by filename (PNG in the folder, JPEG thumbnail in thumbs/<folder>/).
+const PROJECTS = [
+  { title: "Donut & Coffee", folder: "Donut and Coffee",
+    videos: ["composite0000-0047.mov"],
+    images: ["final.png", "scene1.png", "donut1.png", "donut2.png", "coffee1.png", "coffee2.png", "glass1.png"] },
+  { title: "Coke Can", folder: "Coke",
+    videos: ["composite0000-0060.mov"],
+    images: ["can1.png", "can2.png", "can3.png", "can4.png"] },
+  { title: "Revolver", folder: "revolver",
+    videos: ["0000-0040.mov"],
+    images: ["r1.png", "r2.png"] },
+  { title: "Kirby", folder: "kirby",
+    images: ["kirby4.png", "kirby.png", "kirby1.png", "kirby2.png", "kirby3.png"] },
+  { title: "Cherry Blossom", folder: "flower",
+    images: ["final.png", "flower.png"] },
+  { title: "Strawberry", folder: "Strawberry",
+    images: ["Strawberry.png", "sb2.png", "sb3.png"] },
+  { title: "Barrels", folder: "Barrel",
+    images: ["barrel3.png", "barrel1.png", "barrel2.png"] },
+];
+
+const enc = p => p.split("/").map(encodeURIComponent).join("/");
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const nav = document.getElementById("nav");
+const main = document.getElementById("projects");
+const gallery = []; // flat list of images for lightbox navigation
+
+for (const p of PROJECTS) {
+  const id = slug(p.title);
+  const vids = p.videos || [];
+  const a = document.createElement("a");
+  a.href = "#" + id; a.textContent = p.title;
+  nav.append(a);
+
+  const sec = document.createElement("section");
+  sec.id = id;
+  const parts = [];
+  if (p.images.length) parts.push(p.images.length + (p.images.length === 1 ? " render" : " renders"));
+  if (vids.length) parts.push(vids.length + (vids.length === 1 ? " animation" : " animations"));
+  sec.innerHTML = `<div class="sec-head"><h2></h2><span class="count">${parts.join(" · ")}</span></div><div class="grid"></div>`;
+  sec.querySelector("h2").textContent = p.title;
+  const grid = sec.querySelector(".grid");
+
+  for (const v of vids) {
+    const box = document.createElement("div");
+    box.className = "item video";
+    box.innerHTML = `<video autoplay muted loop playsinline controls preload="metadata"><source src="${enc(p.folder + "/" + v)}" type="video/mp4"></video><span class="badge">Animation</span>`;
+    grid.append(box);
+  }
+
+  for (const img of p.images) {
+    const full = p.folder + "/" + img;
+    const thumb = "thumbs/" + p.folder + "/" + img.replace(/\.png$/i, ".jpg");
+    const idx = gallery.push({ src: enc(full), cap: p.title }) - 1;
+    const btn = document.createElement("button");
+    btn.className = "item";
+    btn.setAttribute("aria-label", "View " + p.title + " render full size");
+    btn.innerHTML = `<img src="${enc(thumb)}" alt="${p.title} render" loading="lazy">`;
+    btn.onclick = () => openLb(idx);
+    grid.append(btn);
+  }
+  main.append(sec);
+}
+
+// Pause videos that are off-screen
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause();
+}, { threshold: 0.2 });
+document.querySelectorAll("video").forEach(v => io.observe(v));
+
+// Lightbox
+const lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img"), lbCap = document.getElementById("lb-cap");
+let cur = 0, lastFocus = null;
+function show(i) {
+  cur = (i + gallery.length) % gallery.length;
+  lbImg.src = gallery[cur].src;
+  lbImg.alt = gallery[cur].cap + " render";
+  lbCap.textContent = `${gallery[cur].cap} — ${cur + 1} / ${gallery.length}`;
+}
+function openLb(i) { lastFocus = document.activeElement; show(i); lb.classList.add("open"); document.body.style.overflow = "hidden"; document.getElementById("lb-close").focus(); }
+function closeLb() { lb.classList.remove("open"); document.body.style.overflow = ""; lbImg.src = ""; lastFocus && lastFocus.focus(); }
+document.getElementById("lb-close").onclick = closeLb;
+document.getElementById("lb-prev").onclick = e => { e.stopPropagation(); show(cur - 1); };
+document.getElementById("lb-next").onclick = e => { e.stopPropagation(); show(cur + 1); };
+lb.onclick = e => { if (e.target === lb) closeLb(); };
+document.addEventListener("keydown", e => {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") show(cur - 1);
+  if (e.key === "ArrowRight") show(cur + 1);
+});
+</script>
+</body>
+</html>
